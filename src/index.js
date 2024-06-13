@@ -9,6 +9,7 @@ const maquina = require("./router/maquina");
 const loteCafe = require("./router/loteCafe");
 const seguimiento = require("./router/seguimiento");
 const datos = require("./router/datos");
+const { uploadFile } = require("./controller/upload");
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
@@ -19,6 +20,7 @@ app.use("/api", maquina);
 app.use("/api", loteCafe);
 app.use("/api", seguimiento);
 app.use("/api", datos);
+app.use("/api", uploadFile);
 
 app.get("/", (req, res) => {
   res.send("Welcome to my API");
