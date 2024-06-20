@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const usuarioSchema = mongoose.Schema({
+    
     username: {
         type: String,
         required: true,
@@ -36,8 +37,9 @@ const usuarioSchema = mongoose.Schema({
         require:true
     },
     foto:{
-        type:String,
-        require:true
+        type: mongoose.Schema.Types.ObjectId,  // ID del documento de la colección storage donde se almacena las img
+        ref: 'storage',
+        required: true
     },
     tipoUsuario:{
         type:String,

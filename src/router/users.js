@@ -19,9 +19,6 @@ const usuarioValidationSchema = Joi.object({
     tipoUsuario: Joi.string().valid('Administrador', 'Operario', 'Proveedor').required()
 });
 
-
-
-
 const validateUsuario = (req, res, next) => {
     const { error } = usuarioValidationSchema.validate(req.body);
     if (error) {
@@ -29,9 +26,6 @@ const validateUsuario = (req, res, next) => {
     }
     next();
 };
-
-
-
 
 // Ruta para crear usuario
 routes.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
@@ -75,7 +69,6 @@ routes.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
 
 
 
-
 // Ruta para actualizar un usuario por su ID
 routes.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) => {
     const { id } = req.params;
@@ -107,7 +100,6 @@ routes.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) =>
 
 
 
-
 // Ruta para obtener todos los usuarios
 routes.get('/usuarios', async (req, res) => {
     try {
@@ -134,9 +126,6 @@ routes.get('/usuarios/:id', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
-
-
 
 // Ruta para eliminar un usuario por su ID
 routes.delete('/usuarios/:id', async (req, res) => {
