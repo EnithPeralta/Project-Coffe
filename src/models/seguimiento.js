@@ -1,5 +1,5 @@
 const mongoose  = require("mongoose");
-const loteCafe = require("./loteCafe");
+const { required } = require("joi");
 const seguimientoSchema = mongoose.Schema({
     fecha:{
         type:Date,
@@ -7,24 +7,27 @@ const seguimientoSchema = mongoose.Schema({
     },
     estado:{
         type:String,
-        require:true,
+        required:true,
         enum:['Operando','Fuera de servicio','Mantenimiento']
     },
     maquina:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Maquina'
     },
     loteCafe:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Lotes'
     },
     usuarios:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Usuario'
     },
     idProceso:{
         type:String,
-        require:true
+        required:true
     }
 })
 module.exports = mongoose.model('Seguimiento',seguimientoSchema)

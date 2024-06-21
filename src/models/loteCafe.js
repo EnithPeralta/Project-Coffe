@@ -1,23 +1,24 @@
 const mongoose  = require("mongoose");
-const usuarios = require("./usuarios");
-const tipoProceso = require("./tipoProceso");
-const variedad = require("./variedad");
 const loteCafeSchema = mongoose.Schema({
     peso:{
-        type:String,
+        type:Number,
         required:true
     },
     usuarios:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Usuario'
     },
     tipoProcesos:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'TiposProcesos'
     },
     variedad:{
-        type:String,
-        required:true
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Variedades'
+
     }
 })
 module.exports = mongoose.model('Lotes',loteCafeSchema)

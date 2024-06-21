@@ -14,12 +14,14 @@ routes.post("/tipoProceso", (req, res) => {
 // get all tipos of procesos
 routes.get("/tipoProceso", (req, res) => {
   tiposProcesoSchema
-    .find()
+    .find({})
+    .populate()
+
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
 
-// get a tipos of procesos
+// get a tipos  de procesos
 routes.get("/tipoProceso/:id", (req, res) => {
   const { id } = req.params;
   tiposProcesoSchema
