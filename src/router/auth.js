@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const authRouter = express.Router();
 // modelos
 const Usuario = require("../models/usuarios");
+// importar modelo jwt
+const createAccesToken = require('../utils/jwt.js');
 
 
 // registro de la aplicacion
@@ -32,22 +34,10 @@ authRouter.post('/register', async (req, res) => {
         user.password = await bcrypt.hash(password, salt);
         
         await user.save();
-        
-        const payload = {
-            user: {
-                id: user.id
-            }
-        };
 
-        jwt.sign(
-            payload,
-            'your_jwt_secret',
-            { expiresIn: 3600 },
-            (err, token) => {
-                if (err) throw err;
-                res.json({ user, token });
-            }
-        );
+        const token = await createAccesToken({id:user._id});
+        res.cookie("token", token);
+        res.status(200).json({username, email, cedula, nombreCompleto, telefono, direccion, estado, foto, tipoUsuario});
 
     } catch (err) {
         console.error(err.message);
@@ -65,15 +55,35 @@ authRouter.post('/login', async (req, res) => {
         const comparePassword = await bcrypt.compare(password, user.password);
         comparePassword === false && res.status(400).json({message: 'Contraseña o usuario incorrectos.'});
         
-        // generar token
-        const token = jwt.sign(user.toObject(), 'your_jwt_secret', { expiresIn: "1h" });
-        res.status(200).json({user, comparePassword, token});
+        // generar token y cookie
+        const token = await createAccesToken({ id: user._id, rol: user.tipoUsuario });
+        
+        res.cookie("token", token);
+        res.status(200).json(user);
 
     } catch (error) {
         console.log('Error al ingresar a la aplicacion!');
         console.log(error);
-        res.json(error);
+        res.status(500).json(error);
     }
+})
+
+// salir de la aplicacion
+authRouter.post('/logout', (req, res) => {
+
+    try {
+        
+        res.cookie("token", "", {
+            expires: new Date(0)
+        });
+        res.status(200).json({message: "Sesion cerrada exitosamente!"});
+
+    } catch (error) {
+        console.log(`Error al cerrar la sesion: ${error.message}`);
+        console.log(error);
+        res.status(500).json(`Error al cerrar la sesion: ${error.message}`);
+    }
+
 })
 
 
