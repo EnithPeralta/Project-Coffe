@@ -39,7 +39,7 @@ const usuarioSchema = mongoose.Schema({
     foto:{
         type: mongoose.Schema.Types.ObjectId,  // ID del documento de la colección storage donde se almacena las img
         ref: 'storage',
-        required: true
+        required: false
     },
     tipoUsuario:{
         type:String,
