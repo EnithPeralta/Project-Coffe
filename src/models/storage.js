@@ -1,6 +1,7 @@
 const mongoose  = require("mongoose");
 
 const storageSchema=mongoose.Schema({
+    
     url:{
         type:String,
         required:true
