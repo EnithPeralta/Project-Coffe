@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         
         const extFile = file.originalname.split(".").pop();
-        const filename = `file-${Date.now()}.${extFile}`;
+        const filename = `usuario-${req.body.username}.${extFile}`;
         cb(null, filename)
         
     }
