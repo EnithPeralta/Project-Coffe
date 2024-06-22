@@ -18,8 +18,7 @@ const PUBLIC_URL = process.env.PUBLIC_URL;
         };
     
         try {
-            const data = await storageSchema.create(fileData);
-    
+            const data = await storageSchema.create(fileData);    
             res.status(201).json({ message: "Archivo creado exitosamente", data });
         } catch (error) {
             res.status(500).json({ message: "Error al crear el archivo", error });
