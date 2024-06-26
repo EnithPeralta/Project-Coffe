@@ -24,7 +24,7 @@ const port = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL, process.env.MOVIL_URL],
     credentials: true
 }));
 app.use(cookieParser());
