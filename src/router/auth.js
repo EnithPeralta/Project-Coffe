@@ -10,27 +10,6 @@ const Usuario = require("../models/usuarios");
 const createAccesToken = require('../utils/jwt.js');
 const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:8000';
 
-/*
-// registro de la aplicacion
-authRouter.post('/register', async (req, res) => {
-    const { username, email, password, cedula, nombreCompleto, telefono, direccion, estado, foto, tipoUsuario } = req.body;
-    try {
-        let user = await Usuario.findOne({ email });
-        user && res.status(400).json({ msg: 'El usuario ya existe!' });
-
-        user = new Usuario({
-            username,
-            email,
-            password,
-            cedula,
-            nombreCompleto,
-            telefono,
-            direccion,
-            estado,
-            foto,
-            tipoUsuario
-        });
-*/
 
 // Ruta para registrar usuario
 authRouter.post('/register', uploadMiddleware.single("foto"), async (req, res) => {
@@ -122,6 +101,7 @@ authRouter.post('/login', async (req, res) => {
     }
 })
 
+
 // verificar el token
 authRouter.get('/verify-token', async (req, res) => {
 
@@ -145,6 +125,7 @@ authRouter.get('/verify-token', async (req, res) => {
     }
 
 })
+
 
 // salir de la aplicacion
 authRouter.post('/logout', (req, res) => {

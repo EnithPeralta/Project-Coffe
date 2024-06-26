@@ -40,9 +40,6 @@ app.use("/api", datos);
 app.use("/api", auth);
 app.use("/api", storage);
 
-// los recursos publicos salen de la carpeta storage
-// app.use(express.static("almacenamiento"))
-
 // Los recursos públicos salen de la carpeta almacenamiento
 app.use(express.static(path.join(__dirname, 'almacenamiento')));
 
