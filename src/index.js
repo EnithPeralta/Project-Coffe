@@ -14,7 +14,8 @@ const loteCafe = require("./router/loteCafe");
 const seguimiento = require("./router/seguimiento");
 const datos = require("./router/datos");
 const auth = require("./router/auth");
-const storage = require("./router/storage")
+const storage = require("./router/storage");
+const cookieParser = require("cookie-parser");
 
 // mongoDB
 const mongoConnection = require("./DB/mongoDB.js")
@@ -22,7 +23,11 @@ const mongoConnection = require("./DB/mongoDB.js")
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
+app.use(cookieParser());
 
 // implementacion de las rutas
 app.use("/api", usuario);
@@ -34,8 +39,6 @@ app.use("/api", seguimiento);
 app.use("/api", datos);
 app.use("/api", auth);
 app.use("/api", storage);
-
-
 
 // los recursos publicos salen de la carpeta storage
 // app.use(express.static("almacenamiento"))
