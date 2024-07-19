@@ -26,6 +26,11 @@ const datoSchema=mongoose.Schema({
         type:Date,
         required:true
     },
+    seguimiento:{
+        type: mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Seguimiento'
+    },
     
 })
 module.exports = mongoose.model("Datos",datoSchema)

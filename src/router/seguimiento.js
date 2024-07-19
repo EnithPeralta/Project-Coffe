@@ -3,18 +3,20 @@ const seguimientoSchema = require('../models/seguimiento');
 const maquinaM = require('../models/maquina');
 const loteCafeM = require('../models/loteCafe'); 
 const usuariosM = require('../models/usuarios'); 
+const tipoProcesos = require('../models/tipoProceso');
 const router = express.Router();
 
 // Crear un estado de máquina
 router.post('/seguimiento', async (req, res) => { 
     try {
-        const { maquina, loteCafe, usuarios } = req.body;
+        const { maquina, loteCafe, usuarios, TipoProceso } = req.body;
 
 
         const maquinas = await maquinaM.findById(maquina);
         const loteCafee = await loteCafeM.findById(loteCafe);
         const usuarioss = await usuariosM.findById(usuarios);
-        if (!maquinas || !loteCafee || !usuarioss) {
+        const tipoProceso = await tipoProcesos.findById(TipoProceso);
+        if (!maquinas || !loteCafee || !usuarioss || !tipoProceso) {
             return res.status(400).json({ message: "La maquina, lote de cafe y/o usuarios no existen" });
         }
 
@@ -31,7 +33,8 @@ router.get('/seguimiento', async (req, res) => {
         const data = await seguimientoSchema.find()
             .populate('maquina') 
             .populate('loteCafe') 
-            .populate('usuarios'); 
+            .populate('usuarios')
+            .populate('TipoProceso'); 
         res.json(data);
     } catch (error) {
         res.json({ message: error.message });
