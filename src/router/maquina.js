@@ -5,12 +5,21 @@ const routes = express.Router();
 // Create máquina
 
 routes.post('/maquinas', async (req, res) => {
+    const{
+      id,
+      nombre,
+      estado
+    }=req.body
     try {
-    const maquina = new maquinaSchema(req.body); 
+    const maquina = await new maquinaSchema({
+      id,
+      nombre,
+      estado
+    }); 
     const savedMaquina = await maquina.save();
-    res.json(savedMaquina);
+    res.status(200).json({message:'maquina creda correctamente',maquina:savedMaquina})
     } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message:'error al crear la maquina',error: error.message });
     }
 });
 
@@ -44,8 +53,8 @@ routes.get('/maquinas', async (req, res) => {
 // Get a máquina by ID
 
 routes.get('/maquinas/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
+  const { id } = req.params;  
+  try {     
       const maquina = await maquinaSchema.findById(id);
       res.json(maquina);
     } catch (error) {
@@ -63,10 +72,10 @@ routes.get('/maquinas/:id', async (req, res) => {
 // Update a máquina by ID
 
 routes.put('/maquinas/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nombre,estado } = req.body;
   try {
-    const { id } = req.params;
-    const { nombre } = req.body;
-    const updatedMaquina = await maquinaSchema.updateOne({ _id: id }, { $set: { nombre } });
+    const updatedMaquina = await maquinaSchema.updateOne({ _id: id }, { $set: { nombre,estado } });
     res.json(updatedMaquina);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -87,10 +96,9 @@ routes.put('/maquinas/:id', async (req, res) => {
 
 // Delete a máquina by ID
 routes.delete('/maquinas/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    // No need for 'nombre' from req.body as it's not used in deleteOne
-    await maquinaSchema.deleteOne({ _id: id });
+    await maquinaSchema.findByIdAndDelete(id);
     res.json({ message: 'Máquina eliminada correctamente.' });
   } catch (error) {
     res.status(400).json({ message: error.message });

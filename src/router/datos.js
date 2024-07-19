@@ -23,21 +23,40 @@ const validateDatos = (req, res, next) => {
 };
 
 // Ruta para crear dato
-routes.post('/datos', validateDatos, (req, res) => {
-    const dato = datoSchema(req.body);
-    dato
-    .save()
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-});
+routes.post('/datos', validateDatos, async (req, res) => {
+    try {
+      const nuevoDato = new DatoSchema(req.body); // Use 'new' for instance creation
+      const savedDato = await nuevoDato.save();
+      res.json(savedDato);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+  
+// routes.post('/datos', validateDatos, (req, res) => {
+//     const dato = datoSchema(req.body);
+//     dato
+//     .save()
+//     .then((data) => res.json(data))
+//     .catch((error) => res.json({ message: error }));
+// });
 
 // Ruta para obtener todos los datos
-routes.get('/datos', (req, res) => {
-    datoSchema
-    .find()
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-});
+routes.get('/datos', async (req, res) => {
+    try {
+      const datos = await datoSchema.find();
+      res.json(datos);
+    } catch (error) {
+      res.json({ message: error.message });
+    }
+  });
+  
+// routes.get('/datos', (req, res) => {
+//     datoSchema
+//     .find()
+//     .then((data) => res.json(data))
+//     .catch((error) => res.json({ message: error }));
+// });
 
 // Ruta para obtener un dato por su ID
 routes.get('/datos/:id', (req, res) => {
