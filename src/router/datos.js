@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const datoSchema = require("../models/datos");
+const DatoSchema = require("../models/datos");
 const routes = express.Router();
 
 // Esquema de validación para crear y actualizar datos
@@ -11,12 +11,13 @@ const datosValidationSchema = Joi.object({
     temperaturaPromedio: Joi.string().required(),
     idMaquina: Joi.string().required(),
     fecha: Joi.date().required(),
-    tipoProceso: Joi.string().required(),//
+    seguimiento: Joi.number().required(), 
+    //
 });
 
 // Middleware para validar los datos
 const validateDatos = (req, res, next) => {
-    const { error } = datosValidationSchema.validate(req.body);
+    const { error } = req.body;
     if (error) {
         return res.status(400).json({ message: error.details[0].message });
     }
@@ -25,12 +26,29 @@ const validateDatos = (req, res, next) => {
 
 // Ruta para crear dato
 routes.post('/datos', validateDatos, async (req, res) => {
+    const{
+        temperatura,
+        temperatura_s1,
+        temperatura_s2,
+        temperaturaPromedio,
+        idMaquina,
+        fecha,
+        seguimiento,
+    }=req.body;
     try {
-      const nuevoDato = new DatoSchema(req.body); // Use 'new' for instance creation
+      const nuevoDato = new DatoSchema({
+        temperatura,
+        temperatura_s1,
+        temperatura_s2,
+        temperaturaPromedio,
+        idMaquina,
+        fecha,
+        seguimiento,
+      }); // Use 'new' for instance creation
       const savedDato = await nuevoDato.save();
-      res.json(savedDato);
+      res.status(200).json({message: 'Dato creado correctamente', nuevoDato:savedDato});
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message:'Error al crear el dato',error: error.message });
     }
   });
   
