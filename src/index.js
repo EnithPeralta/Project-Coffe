@@ -33,7 +33,7 @@ app.use(cookieParser());
 app.use("/api", usuario);
 app.use("/api", variedad);
 app.use("/api", tipoProceso);
-app.use("/api", maquina);
+app.use("/api/maquina", maquina);
 app.use("/api", loteCafe);
 app.use("/api", seguimiento);
 app.use("/api", datos);
