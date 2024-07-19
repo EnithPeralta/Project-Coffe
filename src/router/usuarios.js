@@ -14,7 +14,6 @@ const usuarioValidationSchema = Joi.object({
     telefono: Joi.number().required(),
     direccion: Joi.string().required(),
     email: Joi.string().email().required(),
-    estado: Joi.boolean().required(),
     foto: Joi.required(),
     tipoUsuario: Joi.string().valid('Administrador', 'Operario', 'Proveedor').required()
 });
