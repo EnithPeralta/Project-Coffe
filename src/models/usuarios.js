@@ -34,7 +34,6 @@ const usuarioSchema = mongoose.Schema({
     },
     estado:{
         type:Boolean,
-        require:true
     },
     foto:{
         type: mongoose.Schema.Types.ObjectId,

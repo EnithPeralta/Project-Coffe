@@ -10,7 +10,8 @@ const datosValidationSchema = Joi.object({
     temperatura_s2: Joi.string().required(),
     temperaturaPromedio: Joi.string().required(),
     idMaquina: Joi.string().required(),
-    fecha: Joi.date().required()
+    fecha: Joi.date().required(),
+    tipoProceso: Joi.string().required(),//
 });
 
 // Middleware para validar los datos

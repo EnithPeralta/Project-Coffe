@@ -11,7 +11,7 @@ const maquinaSchema = mongoose.Schema({
     estado:{
         type:String,
         require:true,
-        enum:['Activo','Inactivo']
+        enum:['Activo','Inactivo','En Mantenimiento']
     }
 })
 module.exports = mongoose.model('Maquina', maquinaSchema)
