@@ -1,74 +1,93 @@
-const express = require("express");
-const loteCafeSchema = require("../models/loteCafe");
-const router = express.Router();
-const usuarioModel= require('../models/usuarios');
-const tipoProcesosModel=require('../models/tipoProceso');
-const variedadModel=require('../models/variedad');
+import express from 'express'
+import { Lotes } from '../models/loteCafe.js';
+const lotesRouter = express.Router();
+import { Usuario } from '../models/usuarios.js';
+import { TiposProcesos } from '../models/tipoProceso.js';
+import { Variedades } from '../models/variedad.js';
 
 // Crear un lote de café
-router.post('/loteCafe', async (req, res)=>{
+lotesRouter.post('/loteCafe', async (req, res)=>{
     try{
         const { usuarios, tipoProcesos, variedad } = req.body
-        const usuario= await usuarioModel.findById(usuarios)
-        const tipoProceso= await tipoProcesosModel.findById(tipoProcesos)
-        const variedades= await variedadModel.findById(variedad)
+        const usuario= await Usuario.findById(usuarios)
+        const tipoProceso= await TiposProcesos.findById(tipoProcesos)
+        const variedades= await Variedades.findById(variedad)
 
         if (!usuario || !tipoProceso || !variedades) {
             res.status(400).json({message:"el usuario,tipo proceso y variedad no existe"})
         }
 
         
-        const loteCafe= await loteCafeSchema.create(req.body)
-        res.status(400).json(loteCafe);
-    }catch(error){
-        res.status(400).json({message:error.message})
+        const loteCafe= await Lotes.create(req.body)
+        res.status(201).json(loteCafe);
+    } catch(error){
+        res.status(500).json({message:error.message})
     }
 
 });
 
 // Obtener todos los lotes de café
-router.get('/loteCafe', async (req, res) => {
+lotesRouter.get('/loteCafe', async (req, res) => {
     try {
-    const data = await loteCafeSchema.find()
-    .populate('tipoProcesos')
-    .populate('variedad')
-    .populate('usuarios');
-    res.json(data);
+
+        const data = await Lotes.find()
+        .populate('tipoProcesos')
+        .populate('variedad')
+        .populate('usuarios');
+
+        res.status(200).json(data);
+
     } catch (error) {
-      res.json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });  
 
 // Obtener un lote de café por ID
-router.get('/loteCafe/:id', (req, res) => {
+lotesRouter.get('/loteCafe/:id', async (req, res) => {
     const { id } = req.params;
-    loteCafeSchema
-    .findById(id)
-    .populate('tipoProcesos')
-    .populate('variedad')
-    .populate('usuarios')
-    
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+
+    try {
+
+        const data = await Lotes.findById(id)
+            .populate('tipoProcesos')
+            .populate('variedad')
+            .populate('usuarios');
+        
+        res.status(200).json(data);
+
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
 });
 
 // Actualizar un lote de café por ID
-router.put('/loteCafe/:id', (req, res) => {
+lotesRouter.put('/loteCafe/:id', async (req, res) => {
     const { id } = req.params;
     const { peso, proveedores, tiposProcesos, variedad } = req.body;
-    loteCafeSchema
-    .updateOne({_id:id},{$set:{ peso, proveedores, tiposProcesos, variedad }})
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+
+    try {
+
+        const updatedLote = await Lotes.findByIdAndUpdate(id, { peso, proveedores, tiposProcesos, variedad });
+        res.status(200).json(updatedLote);
+
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
 });
+
 
 // Borrar un lote de café por ID
-router.delete('/loteCafe/:id', (req, res) => {
+lotesRouter.delete('/loteCafe/:id', async (req, res) => {
+
     const { id } = req.params;
-    loteCafeSchema
-    .deleteOne({_id:id})
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+
+    try {
+        const deletedLote = await Lotes.findByIdAndDelete(id);
+        res.status(200).json(deletedLote);
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
 });
 
-module.exports = router;
+
+export default lotesRouter

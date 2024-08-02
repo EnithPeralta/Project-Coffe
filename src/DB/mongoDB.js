@@ -1,16 +1,12 @@
 // importar librerias
-const mongoose = require('mongoose');
-// uri de mongo
-const mongoURI = process.env.MONGODB_URI;
+import mongoose from 'mongoose';
 
-const mongoConnection = async() => {
+export const mongoConnection = async() => {
     try {
-        await mongoose.connect(mongoURI);
+        await mongoose.connect(process.env.MONGODB_URI);
         console.log('<<< DB CONECTADA >>>');
+
     } catch (error) {
-        console.log('Error al conectar mongoDB');
+        console.log('<<< Error al conectar mongoDB >>>');
     }
 }
-
-
-module.exports = mongoConnection;

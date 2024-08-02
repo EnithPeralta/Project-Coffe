@@ -1,18 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const uploadMiddleware = require("../utils/handleStorage");
-const {createStorage} = require("../controller/storage");
+import express from 'express'
+import uploadMiddleware from '../utils/handleStorage.js';
+import { createStorage } from '../controller/storage.js';
+const storageRouter = express.Router();
 
 
-/* PUBLIC_URL = http://localhost:3015
-en esta ruta puedo probar el envio del archivo en postman
-pero para verlo, la url es http://localhost:3015/nameFile configurado en el controlador */
+storageRouter.post("/storage", uploadMiddleware.single("myFile"), createStorage)
 
-// single es para un archivo
-// Ruta para guardar archivos de storage
-
-router.post("/storage", uploadMiddleware.single("myFile"), createStorage)
-
-
-
-module.exports = router;
+export default storageRouter;

@@ -1,24 +1,27 @@
 // dependecias
-const express = require("express");
-const cors = require('cors');
-require("dotenv").config();
+import express from "express";
+import path from "path";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
+import { config } from "dotenv";
+
+config();
 const app = express();
-const path = require("path")
 
 // rutas
-const usuario = require("./router/usuarios");
-const variedad = require("./router/variedad");
-const tipoProceso = require("./router/tipoProceso");
-const maquina = require("./router/maquina");
-const loteCafe = require("./router/loteCafe");
-const seguimiento = require("./router/seguimiento");
-const datos = require("./router/datos");
-const auth = require("./router/auth");
-const storage = require("./router/storage");
-const cookieParser = require("cookie-parser");
+import userRouter from "./router/users.js";
+import variedadesRouter from "./router/variedad.js";
+import tipoProcesoRouter from "./router/tipoProceso.js";
+import maquinaRouter from "./router/maquina.js";
+import lotesRouter from "./router/loteCafe.js";
+import seguimientoRouter from "./router/seguimiento.js";
+import datosRouter from "./router/datos.js";
+import authRouter from "./router/auth.js";
+import storageRouter from "./router/storage.js";
 
 // mongoDB
-const mongoConnection = require("./DB/mongoDB.js")
+import { mongoConnection } from "./DB/mongoDB.js";
 
 const port = process.env.PORT || 8000;
 
@@ -30,21 +33,21 @@ app.use(cors({
 app.use(cookieParser());
 
 // implementacion de las rutas
-app.use("/api", usuario);
-app.use("/api", variedad);
-app.use("/api", tipoProceso);
-app.use("/api/maquina", maquina);
-app.use("/api", loteCafe);
-app.use("/api", seguimiento);
-app.use("/api", datos);
-app.use("/api", auth);
-app.use("/api", storage);
+app.use("/api", userRouter);
+app.use("/api", variedadesRouter);
+app.use("/api", tipoProcesoRouter);
+app.use("/api", maquinaRouter);
+app.use("/api", lotesRouter);
+app.use("/api", seguimientoRouter);
+app.use("/api", datosRouter);
+app.use("/api", authRouter);
+app.use("/api", storageRouter);
 
 // Los recursos públicos salen de la carpeta almacenamiento
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'almacenamiento')));
 
-// Iniciar el servidor
-app.listen(port, () => console.log(console.log(`Servidor corriendo en http://localhost:${port}`)));
 
-// conexion con mongoDB
+app.listen(port, () => console.log(`Servidor corriendo en http://localhost:${port}`));
 mongoConnection();

@@ -1,34 +1,13 @@
-const express = require("express");
-const usuarioSchema = require("../models/usuarios");
-const storageSchema = require("../models/storage");
-const routes = express.Router();
-const Joi = require('joi');
-const uploadMiddleware = require('../utils/handleStorage');
+import express from "express";
+import { Usuario } from "../models/usuarios.js";
+import { Storage } from "../models/storage.js";
+import uploadMiddleware from "../utils/handleStorage.js";
+
+const userRouter = express.Router();
 const PUBLIC_URL = process.env.PUBLIC_URL; 
 
-const usuarioValidationSchema = Joi.object({
-    username: Joi.string().required(),
-    password: Joi.string().required(), 
-    cedula: Joi.string().required(),
-    nombreCompleto: Joi.string().required(),
-    telefono: Joi.number().required(),
-    direccion: Joi.string().required(),
-    email: Joi.string().email().required(),
-    estado: Joi.boolean().required(),
-    foto: Joi.required(),
-    tipoUsuario: Joi.string().valid('Administrador', 'Operario', 'Proveedor').required()
-});
-
-const validateUsuario = (req, res, next) => {
-    const { error } = usuarioValidationSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-    next();
-};
-
 // Ruta para crear usuario
-routes.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
+userRouter.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
     const { body, file } = req;
 
     if (!file) {
@@ -42,23 +21,15 @@ routes.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
     };
 
     try {
-        // Guardar el archivo en la colección storage
-        const fileSaved = await storageSchema.create(fileData);
+        const fileSaved = await Storage.create(fileData);
 
-        // Crear los datos del usuario incluyendo la referencia al archivo
-        const userData = {
-            ...body,
-            foto: fileSaved._id
-        };
+        const userData = { ...body, foto: fileSaved._id };
 
-        // Validar el usuario
-        const { error } = usuarioValidationSchema.validate(userData);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
 
-        // Crear el usuario en la base de datos
-        const usuario = new usuarioSchema(userData);
+        const usuario = new Usuario(userData);
         const data = await usuario.save();
 
         res.status(201).json({ message: "Usuario creado exitosamente", data });
@@ -67,10 +38,8 @@ routes.post('/usuarios', uploadMiddleware.single("foto"), async (req, res) => {
     }
 });
 
-
-
 // Ruta para actualizar un usuario por su ID
-routes.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) => {
+userRouter.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) => {
     const { id } = req.params;
     const { body, file } = req;
 
@@ -85,12 +54,11 @@ routes.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) =>
             };
 
             // Guardar el archivo (foto) en la colección storage y vincular id al usuario
-            const fileSaved = await storageSchema.create(fileData);
+            const fileSaved = await Storage.create(fileData);
             userData.foto = fileSaved._id;
         }
 
-        
-        const data = await usuarioSchema.updateOne({ _id: id }, { $set: userData });
+        const data = await Usuario.updateOne({ _id: id }, { $set: userData });
 
         res.json({ message: "Usuario actualizado exitosamente", userData });
     } catch (error) {
@@ -98,40 +66,39 @@ routes.put('/usuarios/:id', uploadMiddleware.single("foto"), async (req, res) =>
     }
 });
 
-
-
 // Ruta para obtener todos los usuarios
-routes.get('/usuarios', async (req, res) => {
+userRouter.get('/usuarios', async (req, res) => {
     try {
-        const data = await usuarioSchema.find({}).populate('foto');
+        const data = await Usuario.find({}).populate('foto');
         res.json(data);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-
-
-
 // Ruta para obtener un usuario por su ID
-routes.get('/usuarios/:id', async (req, res) => {
+userRouter.get('/usuarios/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const data = await usuarioSchema.findById(id).populate('foto');
+
+        const data = await Usuario.findById(id).populate('foto');
+        
         if (!data) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
-        res.json(data);
+
+        res.status(200).json(data);
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
 // Ruta para eliminar un usuario por su ID
-routes.delete('/usuarios/:id', async (req, res) => {
+userRouter.delete('/usuarios/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const data = await usuarioSchema.deleteOne({ _id: id });
+        const data = await Usuario.deleteOne({ _id: id });
         if (data.deletedCount === 0) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -141,4 +108,5 @@ routes.delete('/usuarios/:id', async (req, res) => {
     }
 });
 
-module.exports = routes;
+
+export default userRouter;

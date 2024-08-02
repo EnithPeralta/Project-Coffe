@@ -1,9 +1,9 @@
-const storageSchema = require("../models/storage")
+import { Storage } from "../models/storage.js";
 const PUBLIC_URL = process.env.PUBLIC_URL;
 
     
 //Crear un nuevo archivo y almacenarlo
-const createStorage = async (req, res) => {
+export const createStorage = async (req, res) => {
     const { body, file } = req;
 
     // Verifica si se recibió un archivo
@@ -17,11 +17,9 @@ const createStorage = async (req, res) => {
     };
 
     try {
-        const data = await storageSchema.create(fileData);    
+        const data = await Storage.create(fileData);    
         res.status(201).json({ message: "Archivo creado exitosamente", data });
     } catch (error) {
         res.status(500).json({ message: "Error al crear el archivo", error });
     }
 };
-
-module.exports = { createStorage };

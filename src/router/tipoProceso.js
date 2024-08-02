@@ -1,10 +1,10 @@
-const express = require("express");
-const tiposProcesoSchema = require("../models/tipoProceso");
-const routes = express.Router();
+import express from "express";
+import { TiposProcesos } from "../models/tipoProceso.js";
+const tipoProcesoRouter = express.Router();
 
 // create tipos de procesos
-routes.post("/tipoProceso", (req, res) => {
-  const tipoProceso = tiposProcesoSchema(req.body);
+tipoProcesoRouter.post("/tipoProceso", (req, res) => {
+  const tipoProceso = TiposProcesos(req.body);
   tipoProceso
     .save()
     .then((data) => res.json(data))
@@ -12,8 +12,8 @@ routes.post("/tipoProceso", (req, res) => {
 });
 
 // get all tipos of procesos
-routes.get("/tipoProceso", (req, res) => {
-  tiposProcesoSchema
+tipoProcesoRouter.get("/tipoProceso", (req, res) => {
+  TiposProcesos
     .find({})
     .populate()
 
@@ -22,30 +22,31 @@ routes.get("/tipoProceso", (req, res) => {
 });
 
 // get a tipos  de procesos
-routes.get("/tipoProceso/:id", (req, res) => {
+tipoProcesoRouter.get("/tipoProceso/:id", (req, res) => {
   const { id } = req.params;
-  tiposProcesoSchema
+  TiposProcesos
     .findById(id)
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
 
 // uptade a tipos of procesos
-routes.put("/tipoProceso/:id", (req, res) => {
+tipoProcesoRouter.put("/tipoProceso/:id", (req, res) => {
   const { id } = req.params;
   const { nombre } = req.body;
-  tiposProcesoSchema
+  TiposProcesos
     .updateOne({ _id: id }, { $set: { nombre } })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
 
 // delete a tipos of procesos
-routes.delete("/tipoProceso/:id", (req, res) => {
+tipoProcesoRouter.delete("/tipoProceso/:id", (req, res) => {
   const { id } = req.params;
-  tiposProcesoSchema
+  TiposProcesos
     .deleteOne({ _id: id })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
-module.exports = routes;
+
+export default tipoProcesoRouter;

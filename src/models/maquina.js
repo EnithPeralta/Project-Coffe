@@ -1,4 +1,5 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
+
 const maquinaSchema = mongoose.Schema({
     id:{
         type:String,
@@ -14,4 +15,5 @@ const maquinaSchema = mongoose.Schema({
         enum:['Activo','Inactivo','En Mantenimiento']
     }
 })
-module.exports = mongoose.model('Maquina', maquinaSchema)
+
+export const Maquina = mongoose.model('Maquina', maquinaSchema);

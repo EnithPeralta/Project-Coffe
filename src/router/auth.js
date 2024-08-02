@@ -1,13 +1,13 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const uploadMiddleware = require('../utils/handleStorage');
-const storageSchema = require('../models/storage');
+import express from 'express'
+import bcrypt from "bcrypt";
+import uploadMiddleware from '../utils/handleStorage.js';
+import { Storage } from '../models/storage.js';
 const authRouter = express.Router();
-const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 // modelos
-const Usuario = require("../models/usuarios");
+import { Usuario } from '../models/usuarios.js';
 // importar modelo jwt
-const createAccesToken = require('../utils/jwt.js');
+import { createAccesToken } from '../utils/jwt.js';
 const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:8000';
 
 
@@ -28,9 +28,9 @@ authRouter.post('/register', uploadMiddleware.single("foto"), async (req, res) =
             };
 
             // Buscar o guardar la foto por defecto en la colección storage
-            let fileSaved = await storageSchema.findOne({ filename: 'usuario-undefined.png' });
+            let fileSaved = await Storage.findOne({ filename: 'usuario-undefined.png' });
             if (!fileSaved) {
-                fileSaved = await storageSchema.create(fileData);
+                fileSaved = await Storage.create(fileData);
             }
             fotoId = fileSaved._id;
         } else {
@@ -40,7 +40,7 @@ authRouter.post('/register', uploadMiddleware.single("foto"), async (req, res) =
             };
 
             // Guardar el archivo en la colección storage
-            const fileSaved = await storageSchema.create(fileData);
+            const fileSaved = await Storage.create(fileData);
             fotoId = fileSaved._id;
         }
 
@@ -146,4 +146,4 @@ authRouter.post('/logout', (req, res) => {
 })
 
 
-module.exports = authRouter;
+export default authRouter;

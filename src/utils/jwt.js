@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-function createAccesToken(payload){
+export function createAccesToken(payload){
 
     return new Promise((resolve,reject)=>{
         jwt.sign(
@@ -16,5 +16,3 @@ function createAccesToken(payload){
     })
 
 }
-
-module.exports = createAccesToken;

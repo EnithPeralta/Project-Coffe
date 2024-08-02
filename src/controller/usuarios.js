@@ -1,7 +1,8 @@
-const usuarioSchema = require("../models/usuarios")
-const bcrypt = require('bcrypt');
+import { Usuario } from '../models/usuarios';
+import bcrypt from 'bcrypt'
 
-usuarioSchema.pre('save', function(next) {
+
+Usuario.pre('save', function(next) {
     if (!this.isModified('password')) return next();
 
     bcrypt.hash(this.password, 10, (err, hash) => {
@@ -12,7 +13,7 @@ usuarioSchema.pre('save', function(next) {
 });
 
 // Método para comparar la contraseña
-usuarioSchema.methods.comparePassword = function(candidatePassword) {
+Usuario.methods.comparePassword = function(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 

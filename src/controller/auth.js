@@ -1,7 +1,8 @@
 // importando librerias
-const express = require('express');
+import express from "express"
 // importar modelos
-const Usuario = require('../models/usuarios.js');
+import { Usuario } from "../models/usuarios.js";
+import { defaults } from "joi";
 
 
 // rutas de la aplicacion
@@ -25,4 +26,4 @@ router.post('/login', async (req, res) => {
 
 
 
-module.exports = router;
+export default router

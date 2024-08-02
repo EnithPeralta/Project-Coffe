@@ -1,49 +1,51 @@
-const mongoose = require('mongoose');
-const usuarioSchema = mongoose.Schema({
-    
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    cedula:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    nombreCompleto:{
-        type:String,
-        required:true
-    },
-    telefono:{
-        type:Number,
-        required:true
-    },
-    direccion:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true,
-        unique: true
-    },
-    estado:{
-        type:Boolean,
-    },
-    foto:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'storage',
-        required: false
-    },
-    tipoUsuario:{
-        type:String,
-        enum: ['Administrador','Operario','Proveedor'],
-        require:true
-    }
-})
-module.exports = mongoose.model('Usuario',usuarioSchema)
+import mongoose from 'mongoose';
+
+const usuarioSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  cedula: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  nombreCompleto: {
+    type: String,
+    required: true
+  },
+  telefono: {
+    type: Number,
+    required: true
+  },
+  direccion: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  estado: {
+    type: Boolean
+  },
+  foto: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'storage',
+    required: false
+  },
+  tipoUsuario: {
+    type: String,
+    enum: ['Administrador', 'Operario', 'Proveedor'],
+    required: true
+  }
+});
+
+export const Usuario = mongoose.model('Usuario', usuarioSchema);
+

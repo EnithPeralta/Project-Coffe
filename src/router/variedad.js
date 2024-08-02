@@ -1,10 +1,11 @@
-const express = require("express")
-const variedadSchema = require("../models/variedad")
-const routes = express.Router()
+import express from "express";
+import { Variedades } from "../models/variedad.js";
+
+const variedadesRouter = express.Router()
 
 // create variedad
-routes.post('/variedad', (req, res) => {
-    const variedad = variedadSchema(req.body)
+variedadesRouter.post('/variedad', (req, res) => {
+    const variedad = Variedades(req.body)
     variedad
     .save()
     .then((data)=>res.json(data))
@@ -12,38 +13,39 @@ routes.post('/variedad', (req, res) => {
 })
 
 // get all variedad
-routes.get('/variedad', (req, res) => {
-    variedadSchema
+variedadesRouter.get('/variedad', (req, res) => {
+    Variedades
     .find()
     .then((data)=>res.json(data))
     .catch((error)=>res.json({message:error}))
 })
 
 // get a variedad
-routes.get('/variedad/:id', (req, res) => {
+variedadesRouter.get('/variedad/:id', (req, res) => {
     const {id} = req.params;
-    variedadSchema
+    Variedades
     .findById(id)
     .then((data)=>res.json(data))
     .catch((error)=>res.json({message:error}))
 })
 
 // uptade a variedad
-routes.put('/variedad/:id',(req,res)=>{
+variedadesRouter.put('/variedad/:id',(req,res)=>{
     const {id} = req.params;
     const {nombre} = req.body;
-    variedadSchema
+    Variedades
     .updateOne({_id:id},{$set:{nombre}})
     .then((data)=>res.json(data))
     .catch((error)=>res.json({message:error}))
 })
 
 // delete a variedad
-routes.delete('/variedad/:id',(req,res)=>{
+variedadesRouter.delete('/variedad/:id',(req,res)=>{
     const {id} = req.params;
-    variedadSchema
+    Variedades
     .deleteOne({_id:id})
     .then((data)=>res.json(data))
     .catch((error)=>res.json({message:error}))
 })
-module.exports = routes
+
+export default variedadesRouter;

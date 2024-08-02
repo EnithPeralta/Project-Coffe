@@ -1,36 +1,35 @@
-const { required, date } = require("joi");
-const mongoose  = require("mongoose");
+import mongoose from 'mongoose';
 
-const datoSchema=mongoose.Schema({
-    temperatura:{
-        type:String,
-        required:true
+const datoSchema = new mongoose.Schema({
+    temperatura: {
+        type: String,
+        required: true
     },
-    temperatura_s1:{
-        type:String,
-        required:true
+    temperatura_s1: {
+        type: String,
+        required: true
     },
-    temperatura_s2:{
-        type:String,
-        required:true
+    temperatura_s2: {
+        type: String,
+        required: true
     },
-    temperaturaPromedio:{
-        type:String,
-        required:true
+    temperaturaPromedio: {
+        type: String,
+        required: true
     },
-    idMaquina:{
-        type:String,
-        required:true
+    idMaquina: {
+        type: String,
+        required: true
     },
-    fecha:{
-        type:Date,
-        required:true
+    fecha: {
+        type: Date,
+        required: true
     },
-    seguimiento:{
+    seguimiento: {
         type: mongoose.Schema.Types.ObjectId,
-        required:true,
+        required: true,
         ref: 'Seguimiento'
-    },
-    
-})
-module.exports = mongoose.model("Datos",datoSchema)
+    }
+});
+
+export const Datos = mongoose.model('Datos', datoSchema);
