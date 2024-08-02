@@ -37,7 +37,7 @@ const usuarioSchema = new mongoose.Schema({
   },
   foto: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'storage',
+    ref: 'Storage',
     required: false
   },
   tipoUsuario: {

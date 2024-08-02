@@ -6,8 +6,11 @@ import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import { config } from "dotenv";
 
-config();
 const app = express();
+config();
+
+// mongoDB
+import { mongoConnection } from "./DB/mongoDB.js";
 
 // rutas
 import userRouter from "./router/users.js";
@@ -19,9 +22,6 @@ import seguimientoRouter from "./router/seguimiento.js";
 import datosRouter from "./router/datos.js";
 import authRouter from "./router/auth.js";
 import storageRouter from "./router/storage.js";
-
-// mongoDB
-import { mongoConnection } from "./DB/mongoDB.js";
 
 const port = process.env.PORT || 8000;
 
