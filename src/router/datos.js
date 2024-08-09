@@ -25,7 +25,7 @@ datosRouter.post('/datos', async (req, res) => {
         seguimiento,
       }); // Use 'new' for instance creation
       const savedDato = await nuevoDato.save();
-      res.status(200).json({message: 'Dato creado correctamente', nuevoDato:savedDato});
+      res.status(201).json({message: 'Dato creado correctamente', nuevoDato:savedDato});
     } catch (error) {
       res.status(400).json({ message:'Error al crear el dato',error: error.message });
     }

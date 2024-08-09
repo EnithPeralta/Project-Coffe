@@ -21,9 +21,9 @@ seguimientoRouter.post('/seguimiento', async (req, res) => {
         }
 
         const seguimiento = await Seguimiento.create(req.body);
-        res.status(200).json(seguimiento); 
+        res.status(201).json(seguimiento); 
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
@@ -35,38 +35,65 @@ seguimientoRouter.get('/seguimiento', async (req, res) => {
             .populate('loteCafe') 
             .populate('usuarios')
             .populate('TipoProceso'); 
-        res.json(data);
+        res.status(200).json(data);
     } catch (error) {
-        res.json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Obtener un estado de máquina por ID
-seguimientoRouter.get('/seguimiento/:id', (req, res) => {
-    const { id } = req.params;
-    Seguimiento
-    .findById(id)
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+seguimientoRouter.get('/seguimiento/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const seguimiento = await Seguimiento.findById(id);
+        res.status(200).json(seguimiento);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
+
 
 // Actualizar un estado de máquina por ID
-seguimientoRouter.put('/seguimiento/:id', (req, res) => {
-    const { id } = req.params;
-    const { estado, rotor, temperatura, temperatura_s1, temperatura_s2, temperatura_promedio, fecha, maquina, operarios, lote_cafe } = req.body;
-    Seguimiento
-    .updateOne({_id:id}, {$set:{ estado, rotor, temperatura, temperatura_s1, temperatura_s2, temperatura_promedio, fecha, maquina, operarios, lote_cafe }})
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+seguimientoRouter.put('/seguimiento/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estado, rotor, temperatura, temperatura_s1, temperatura_s2, temperatura_promedio, fecha, maquina, operarios, lote_cafe } = req.body;
+
+        const updatedSeguimiento = await Seguimiento.updateOne(
+            { _id: id },
+            {
+                $set: {
+                    estado,
+                    rotor,
+                    temperatura,
+                    temperatura_s1,
+                    temperatura_s2,
+                    temperatura_promedio,
+                    fecha,
+                    maquina,
+                    operarios,
+                    lote_cafe
+                }
+            }
+        );
+
+        res.status(200).json(updatedSeguimiento);
+    }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
+
 // Borrar un estado de máquina por ID
-seguimientoRouter.delete('/seguimiento/:id', (req, res) => {
-    const { id } = req.params;
-    Seguimiento
-    .deleteOne({_id:id})
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+seguimientoRouter.delete('/seguimiento/:id', async (req, res) => {
+    try{
+        const { id } = req.params;
+        const deletedSeguimiento = await Seguimiento.deleteOne({ _id: id });
+        res.status(200).json(deletedSeguimiento);
+    }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
+
 
 export default seguimientoRouter;
