@@ -13,7 +13,7 @@ maquinaRouter.get('/maquinas/:id', async (req, res) => {
 
   try {     
     const maquina = await Maquina.findById(id);
-    res.status(200).json(maquina);
+    res.status(201).json(maquina);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
